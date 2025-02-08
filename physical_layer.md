@@ -30,6 +30,8 @@ Key specifications per GPU node:
 - **Visualization Nodes (LUMI-D)**:
   - Dedicated to visualization tasks.
 
+![types_of_nodes](assets/img.png)
+
 ### 2. **Storage Systems**
 
 LUMI uses multiple storage systems, and compute nodes do not have local disks. Instead, you must use the shared storage provided:
@@ -74,6 +76,7 @@ Lustre performs best with fewer, larger files. A large number of small files (**
 The /tmp directory on the compute nodes resides in memory (since there’s no local disk on computation nodes) he memory used for /tmp is included in the job memory allocation. If you plan to use /tmp for temporary files, be sure to allocate enough memory to accommodate it.
 - On LUMI’s compute nodes, there is no local disk storage as you might have on your personal computer. Instead, the /tmp directory is provided in memory (RAM) and is used for temporary file storage during a job’s execution. This means that any file you write to /tmp is stored in the node’s allocated memory and **will be lost when your job ends**.
 - **Avoiding I/O Bottlenecks**: For operations that require very fast read/write access and don’t need long-term storage, /tmp can be useful.
+- example to access it:
 ```bash
 export MIOPEN_USER_DB_PATH="/tmp/$(whoami)-miopen-cache-\$SLURM_NODEID"
 export MIOPEN_CUSTOM_CACHE_DIR=\$MIOPEN_USER_DB_PATH
@@ -83,4 +86,10 @@ if [ \$SLURM_LOCALID -eq 0 ] ; then
     rm -rf \$MIOPEN_USER_DB_PATH
     mkdir -p \$MIOPEN_USER_DB_PATH
 fi
+```
+- Requesting memory in batch job:
+```bash
+--mem	# Set the memory per node
+--mem-per-cpu	# Set the memory per allocated CPU cores
+--mem-per-gpu	# Set the memory per allocated GPU
 ```
