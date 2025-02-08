@@ -18,18 +18,57 @@ looks like this example:
 to find images of containers at prebuild torch-roc, see:
 ls /appl/local/containers/sif-images
 
+or here AMD releasing them officially on docker-hub:
+https://hub.docker.com/u/rocm
+
 Available GPU partitions
 • standard-g
-≤ 48h, whole nodes only, max 1024 nodes/job small-g
+≤ 48h, whole nodes only, max 1024 nodes/job 
+small-g
 ≤ 72h, individual GCDs, max 4 nodes/job
 • dev-g
-≤ 3h, individual GCDs, max 32 nodes/job, max 1 job running
+≤ 3h, individual GCDs, max 32 nodes/job, max 2 job running
 
 check GPU utilizations:
 srun --overlap --pty --jobid=num_of_your_job bash
+then to check GPU utilizations (inside of command from before):
+rocm-smi
+
+eventhouhg we are running on ROCm, in pytorch you call cuda:
+bash:
+singularity exec $SIF python -c 'import torch; print(f"Number of GPUs : {torch.cuda.device_count()}"); print(torch.cuda.get_device_properties(0))'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 tutorials:
 https://github.com/Lumi-supercomputer/Getting_Started_with_AI_workshop/tree/main?tab=readme-ov-file
 
 videos and slides:
 https://lumi-supercomputer.github.io/LUMI-training-materials/ai-20250204/index.html
+
+docs to tutorial:
+https://md.sigma2.no/lumi-ai-workshop-feb25
