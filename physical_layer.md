@@ -59,6 +59,8 @@ For input data and intermediate results. These areas have larger quotas but may 
 - **Project Flash** (/flash/<project>):
 When you need extra high I/O bandwidth for your input data (note that this option is more expensive).
 
+![types_of_nodes](assets/img_5.png)
+
 **The Lustre File System**
 
 LUMI-P and LUMI-F are built on the Lustre file system, which splits file storage into two main parts:
