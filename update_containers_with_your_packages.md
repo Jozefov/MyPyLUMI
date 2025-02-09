@@ -42,6 +42,7 @@ and now we have container from minimal_pytorch.sif and want to extend it with le
 Create a virtual environment via venv
 Inside the container, create a virtual environment via venv, it is run in bash of container from now on, all this commands below:
 python -m venv myenv --system-site-packages
+
 The --system-site-packages flag gives the virtual environment access to the packages inside, it is important, otherwise it will create new empy env and will not take into accounts one from minimal_pytorch.sif
 the container.
 Activate the environment via
@@ -50,6 +51,9 @@ source myenv/bin/activate
 Install custom packages via pip
 pip install torchmetrics
 The new package will then be available alongside the packages in the container, this way it will be saved in virtual env and not home directory, which is small 20Gb only.
+
+If we want to run the container with the freshly installed packages in a batch script, we need to first source the venv before executing the python script:
+singularity exec minimal_pytorch.sif bash -c "source myenv/bin/activate && python my_script.py"
 
 We can check the location of the installed files via
 Location of installed packages
