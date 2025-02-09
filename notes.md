@@ -92,26 +92,72 @@ ls /appl/local/containers/sif-images
   - The command module spider searches for modules and shows you all the available versions and any additional steps needed to load them.
   - Running in bash `module spider pytorch` might output:
     - ![types_of_nodes](assets/img_8.png)
+    - 
+- **Comparison of Modules and Singularity images**:
+  - **module spider pytorch**:
+    - Searches through the module system.
+    **Returns a module name (e.g., PyTorch/2.2.0-rocm-5.6.1-python-3.10-singularity-20240209) that, when loaded, sets up your environment (including pointing to the proper container image).
+  - **ls /appl/local/containers/sif-images**:
+    - Lists all Singularity image files available on the system.
+    - You might see an image like lumi-pytorch-rocm-5.7.3-python-3.12-pytorch-v2.2.2.sif here.
+    - The module system abstracts this detail for you, so you don’t have to remember the full path or exact name when setting up your job.
 
+## **EXAMPLE**
 
+In this example we start an interactive session, load the required modules, and run a Python command to verify that PyTorch sees the GPUs. Follow the steps below:
 
+### 1. Start an Interactive Session
 
+Run the following command to reserve a node with 2 GPUs and 2 CPU cores using the dev-g partition:
+```bash
+srun --export=ALL --preserve-env --account=project_<project_number> --partition=dev-g --time=0:30:00 --nodes=1 --cpus-per-node=2 --pty bash
+```
 
+- **srun**: Launches a job via SLURM.
+- **–export=ALL –preserve-env**: Ensures your current environment variables are passed along.
+- **–account, –partition, –time, –nodes, –cpus-per-node**: Specify your project account, partition type, job duration, number of nodes, and CPU allocation.
+- **–pty bash**: Opens an interactive bash shell on the compute node.
 
+### 2. Load the Required Modules
+Once in your interactive session, prepare your environment by loading the necessary modules:
+```bash
+module purge
+module load CrayEnv
+module load LUMI/22.08 partition/G
+module load PyTorch/2.2.0-rocm-5.6.1-python-3.10-singularity-20240209
+```
+- **module purge**: Clears any preloaded modules for a clean environment.
+- **module load CrayEnv**: Loads the base Cray environment.
+- **module load LUMI/22.08 partition/G**: Loads the appropriate LUMI software stack for your partition (required by pytorch, found by `model spider pytorch` command).
+- module load PyTorch/…: Loads the PyTorch module that provides a Singularity container image along with the necessary environment variables (e.g., SIF and WITH_CONDA).
 
+You can verify that the PyTorch module has set the Singularity image path by running:
+```bash
+echo $SIF
+```
+Thi will return somethign like: `/users/your_account/EasyBuild/SW/container/PyTorch/2.2.0-rocm-5.6.1-python-3.10-singularity-20240209/lumi-pytorch-rocm-5.6.1-python-3.10-pytorch-v2.2.0-dockerhash-f72ddd8ef883.sif`
 
+### 3. Execute a Python Command Inside the Container
 
+Run the following command to activate the container’s Conda environment and execute a Python command that checks the available GPUs:
 
+```bash
+singularity exec $SIF bash -c 'eval "$WITH_CONDA" && python -c "import torch; print(f\"Number of GPUs: {torch.cuda.device_count()}\"); print(torch.cuda.get_device_properties(0))"'
+```
 
+- **singularity exec $SIF bash -c ‘…’**: Runs a bash shell inside the Singularity container specified by the SIF environment variable.
+- **eval “\$WITH_CONDA”**: Activates the internal Conda environment within the container.
 
+**Why this is necessary**:
 
-How It Comes Together in the Script:
-	•	Setting Up the Environment:
-	•	The script begins by purging any preloaded modules (module purge), then adds the directory with the desired modules (module use /appl/local/training/modules/AI-20240529/), and finally loads the necessary Singularity modules.
-	•	Launching the Container:
-	•	The command srun singularity exec $CONTAINER python GPT-neo-IMDB-finetuning.py ... does the following:
-	•	srun: Submits the job command under SLURM.
-	•	singularity exec $CONTAINER: Launches a container from the specified Singularity image file (.sif file) and executes the following command inside the container.
-	•	python GPT-neo-IMDB-finetuning.py ...: Runs your Python script (in this example, for fine-tuning a GPT model).
+Unlike some containers that automatically set up the environment, the PyTorch container on LUMI uses a Conda environment that isn’t active by default. Running eval "$WITH_CONDA" ensures that the python executable (and all other dependencies) become available in the container’s PATH. This information were find by `model spider pytorch` command.
+
+### OUTPUT
+```bash
+Number of GPUs: 2
+_CudaDeviceProperties(name='AMD Instinct MI250X', major=9, minor=0, gcnArchName='gfx90a:sramecc+:xnack-', total_memory=65520MB, multi_processor_count=110)
+```
+This confirms that the container is running correctly, the Conda environment is activated, and PyTorch can detect the available GPUs.
+
 
     
