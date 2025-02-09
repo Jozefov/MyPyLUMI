@@ -23,6 +23,9 @@
 #SBATCH --time=0:15:00
 ```
 
+**Confusions:**
+Task here means individual process (which by default gets one cpu core allocated) so --ntasks-per-node says how many processes per node your job executes; --gpus-per-node is to allocate gpus per node to your job. If you need to allocate more cpus per task (process with multithreading), use --cpus-per-task in addition. Note that combining --ntasks-per-node and --gpus-per-node results in each task (process) having access to all allocated gpus.
+
 ## 2. Available GPU Partitions
 
 - **standard-g**:
@@ -159,5 +162,8 @@ _CudaDeviceProperties(name='AMD Instinct MI250X', major=9, minor=0, gcnArchName=
 ```
 This confirms that the container is running correctly, the Conda environment is activated, and PyTorch can detect the available GPUs.
 
-
+### Note on Docker and Containers in general:
+- Don't use docker hub for LUMI, it is a bad idea. These containers will not be built for the communication network of LUMI.
+- Containers that are built specifically for LUMI, but we have some in `/appl/local/containers/sif-images`.
+- These are built with a special procedure that you cannot easily mimic as a user, to guarantee that they can interface correctly with the Slingshot interconnect, and in case additional packages need MPI, with the right MPI libraries.
     
