@@ -1,2 +1,3 @@
 - For GPUs profiling and monitoring I found usefully this [workshop]( https://lumi-supercomputer.github.io/LUMI-training-materials/4day-20241028/extra_4_11_Best_Practices_GPU_Optimization/)
 - Application software is made available by LUST and requires knowledge of LUMI [software stack](https://docs.lumi-supercomputer.eu/runjobs/lumi_env/softwarestacks/#crayenv), such as CrayEnv, LUMI, useful explanation is provided on workshop [here](https://lumi-supercomputer.github.io/LUMI-training-materials/2day-20241210/M05-SoftwareStacks/#qa)
+- Good workshop for containers, can be found [here](https://lumi-supercomputer.github.io/LUMI-training-materials/2day-20241210/M11-Containers/).
