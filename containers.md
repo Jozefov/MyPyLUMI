@@ -1,3 +1,6 @@
+# TODO
+PRezentacia here: https://lumi-supercomputer.github.io/LUMI-training-materials/ai-20250204/extra_05_RunningContainers/
+
 • Main singularity commands, do i need them actually?:
 o Getting (pulling) a container from a container registry
 singularity pull my_container.sif docker://ubuntu:22.04
