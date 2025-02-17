@@ -7,3 +7,14 @@ and all my computation was utilized purely by CPUs.
 - profiler rocprof, omnitrace, omniperf (kernel optimization)
 - -   ![unsuccessful_train](assets/img_10.png)
 - you also have option for profiling with torch.profiler, solved in torch lighting and wandb
+
+to check in bash if you utilze GPU, you can do:
+squeue --me
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+           9481771     dev-g     bash your_name  R      34:19      1 nid005007
+
+then do:
+srun --interactive --pty --jobid=9481771 rocm-smi
+
+and you should see something like, where main to focus is power usage, for one GPU utilized, it should be at around 250W
+![unsuccessful_train](assets/img_11.png)

@@ -18,6 +18,9 @@ Each of this modeuls come also with environment, and can be checked, [here](http
 To check the exact packages and versions included in the loaded module you can run:
 list-packages
 
+run interactive:
+srun --export=ALL --preserve-env --account=project_465001738 --partition=dev-g --time=1:00:00 --nodes=1 --gpus-per-node=1 --cpus-per-task=7 --pty bash
+
 sbatch script for csc version:
 #!/bin/bash
 #SBATCH --account=<project>
