@@ -106,6 +106,15 @@ then run script:
 python3 scripts/run_cut_trees_LUMI.py
 
 
+## **for multi-gpu**:
+Launch your script in multi-task mode so that each process is started separately and gets its own SLURM_LOCALID. For example, change your srun command to spawn 2 tasks on the node:
+srun --export=ALL --preserve-env --account=project_465001738 --partition=dev-g --time=1:00:00 --nodes=1 --ntasks-per-node=2 --gpus-per-node=2 --cpus-per-task=7 --pty bash
+This command:
+- Spawns 2 separate processes (one per GPU).
+- ures that SLURM sets SLURM_LOCALID correctly for each task (e.g., 0 for one process, 1 for the other).
+- When your code checks for SLURM_LOCALID, each process will set CUDA_VISIBLE_DEVICES to its own rank (so one process sees GPU 0 and the other sees GPU 1).
+
+
 AFTER EVERYTHING INSTALLED USE:
 module use /appl/local/csc/modulefiles/
 module load pytorch/2.4
