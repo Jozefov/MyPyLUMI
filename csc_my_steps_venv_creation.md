@@ -22,6 +22,7 @@ or the actual hostname you normally use.
 2. Move to Your Project Folder
 
 cd /scratch/project_465002061  # or /projappl/project_465002061
+or cd $BOOK_CHAPTER
 ls
 # Example: Go into your project
 cd DreaMS_MIMB
@@ -106,7 +107,8 @@ Every new session:
 module use /appl/local/csc/modulefiles/
 module load pytorch
 source /scratch/project_465002061/DreaMS_MIMB/dreams_mimb/bin/activate
-
+then e.g.:
+python3 ../scripts/train.py --config-name test_config.yaml
 
 ⸻
 
